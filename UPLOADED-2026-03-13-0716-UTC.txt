@@ -1,0 +1,3 @@
+ClawSentinel beta14 SOURCE v9
+Built: 2026-03-13 07:16 UTC
+This file confirms the zip was correctly uploaded and extracted.

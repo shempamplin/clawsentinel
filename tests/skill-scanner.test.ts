@@ -1755,3 +1755,68 @@ describe("dangerous-action-no-hitl", () => {
   });
 
 });
+
+// ── Regression tests for v8 rule fixes (Grok 20260312-064-GROK → 20260312-065-CLAUDE) ──
+// BP-002: inject-worker-thread — added require('worker_threads') branch
+// BP-010: exfil-variable-indirection-headers — broader headers.set/append pattern
+// BP-011: inject-dynamic-jailbreak — variable-assigned array + .join detection
+
+describe("inject-worker-thread (BP-002 regression)", () => {
+  const RULE = "inject-worker-thread";
+
+  it("triggers on require('worker_threads') and new Worker(userScript)", () => {
+    expect(triggers(RULE, `const { Worker } = require("worker_threads"); new Worker(userScript);`)).toBe(true);
+  });
+
+  it("triggers on require wt and new wt.Worker(fn)", () => {
+    expect(triggers(RULE, `const wt = require("worker_threads"); const w = new wt.Worker(fn);`)).toBe(true);
+  });
+
+  it("does NOT trigger on new Worker with static string path", () => {
+    expect(safe(RULE, `new Worker("./worker.js");`)).toBe(true);
+  });
+
+  it("does NOT trigger on new Worker with path.join", () => {
+    expect(safe(RULE, `new Worker(path.join(__dirname, "background-task.js"));`)).toBe(true);
+  });
+});
+
+describe("exfil-variable-indirection-headers (BP-010 regression)", () => {
+  const RULE = "exfil-variable-indirection-headers";
+
+  it("triggers on headers.set with variable name and value", () => {
+    expect(triggers(RULE, `const h = "Authorization"; const v = apiKey; headers.set(h, v); fetch(url, { headers });`)).toBe(true);
+  });
+
+  it("triggers on headers.append with variable name and env value", () => {
+    expect(triggers(RULE, `const name = "x-api-key"; const val = process.env.KEY; headers.append(name, val);`)).toBe(true);
+  });
+
+  it("does NOT trigger on headers.set with string literal second arg", () => {
+    expect(safe(RULE, `headers.set("Content-Type", "application/json");`)).toBe(true);
+  });
+
+  it("does NOT trigger on headers.set with variable name but static value", () => {
+    expect(safe(RULE, `headers.set(headerName, "Bearer static-value");`)).toBe(true);
+  });
+});
+
+describe("inject-dynamic-jailbreak (BP-011 regression)", () => {
+  const RULE = "inject-dynamic-jailbreak";
+
+  it("triggers on variable-assigned array with jailbreak keywords joined", () => {
+    expect(triggers(RULE, `const parts = ["ignore", "all", "instructions"]; const p = parts.join(" ");`)).toBe(true);
+  });
+
+  it("triggers on variable-assigned array with override keywords joined", () => {
+    expect(triggers(RULE, `const words = ["override", "previous", "rules"]; sendToLLM(words.join(" "));`)).toBe(true);
+  });
+
+  it("does NOT trigger on benign array joined", () => {
+    expect(safe(RULE, `const parts = ["hello", "world"]; const greeting = parts.join(" ");`)).toBe(true);
+  });
+
+  it("does NOT trigger on benign words array sent to LLM", () => {
+    expect(safe(RULE, `const words = ["generate", "a", "poem"]; sendToLLM(words.join(" "));`)).toBe(true);
+  });
+});

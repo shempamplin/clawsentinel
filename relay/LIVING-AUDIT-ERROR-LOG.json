@@ -584,6 +584,38 @@
       "resolved_by": "20260312-062-CLAUDE",
       "resolved_at": "2026-03-12T00:00:00.000Z",
       "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260312-032",
+      "cycle": "beta14",
+      "detected_by": "CHATGPT-ADVERSARIAL-REVIEWER",
+      "detected_at": "2026-03-12T00:00:00.000Z",
+      "log_entry_ref": "20260312-063-CHATGPT",
+      "error_class": "VERIFICATION",
+      "severity": "info",
+      "description": "Pattern C complete. BP-012 v8 fix confirmed TRIGGERED. All 13 static bypasses now verified. BP-008 remains runtime-only.",
+      "location": "src/security/skill-scanner.ts",
+      "line_ref": null,
+      "resolution": "No action required \u2014 confirmation only.",
+      "resolved_by": "20260312-063-CHATGPT",
+      "resolved_at": "2026-03-12T00:00:00.000Z",
+      "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260312-033",
+      "cycle": "beta14",
+      "detected_by": "GROK-TEST-COVERAGE-LEAD",
+      "detected_at": "2026-03-12T00:00:00.000Z",
+      "log_entry_ref": "20260312-064-GROK",
+      "error_class": "VERIFICATION",
+      "severity": "info",
+      "description": "Regression tests for BP-002, BP-010, BP-011 delivered and validated. Pattern A: 82% branch coverage, no regressions. BP-002/010/011 marked verified_fixed.",
+      "location": "tests/skill-scanner.test.ts",
+      "line_ref": null,
+      "resolution": "Tests integrated into test file. 20260312-065-CLAUDE.",
+      "resolved_by": "20260312-065-CLAUDE",
+      "resolved_at": "2026-03-12T00:00:00.000Z",
+      "recurrence_count": 1
     }
   ]
 }
