@@ -568,6 +568,22 @@
       "resolved_by": "20260312-060-CLAUDE",
       "resolved_at": "2026-03-12T00:00:00.000Z",
       "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260312-031",
+      "cycle": "beta14",
+      "detected_by": "CHATGPT-ADVERSARIAL-REVIEWER",
+      "detected_at": "2026-03-12T00:00:00.000Z",
+      "log_entry_ref": "20260312-061-CHATGPT",
+      "error_class": "RULE_MISS",
+      "severity": "high",
+      "description": "supply-unverified-external-import pattern only matched static ESM import syntax, missing dynamic import('pkg') form. ChatGPT D4F1 confirmation pass caught this.",
+      "location": "src/security/skill-scanner.ts \u2014 OWASP_BETA12_RULES",
+      "line_ref": null,
+      "resolution": "Added dynamic import() branch to pattern. 20260312-062-CLAUDE.",
+      "resolved_by": "20260312-062-CLAUDE",
+      "resolved_at": "2026-03-12T00:00:00.000Z",
+      "recurrence_count": 1
     }
   ]
 }

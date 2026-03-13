@@ -1501,8 +1501,9 @@ const OWASP_BETA12_RULES: ScanRule[] = [
       "imports (./foo, ../bar) and path imports (/abs/path). The /g flag was removed from " +
       "Gemini's original to prevent stateful RegExp.lastIndex bugs.",
     remediable: false,
-    // Match: import ... from 'packagename' where packagename is not relative or absolute path
-    pattern: /import\s+.+\s+from\s+['"](?!\.\.?\/|\/|@clawsentinel\/)[^'"]{2,}['"]/,
+    // Match: static import ... from 'pkg' OR dynamic import('pkg') — not relative, absolute, or @clawsentinel scoped
+    // BP-012 fix (20260312-061-CLAUDE): added dynamic import() branch — static-only pattern missed await import('left-pad')
+    pattern: /import\s+.+\s+from\s+['"](?!\.\.?\/|\/|@clawsentinel\/)[^'"]{2,}['"]|(?:await\s+)?import\s*\(\s*['"](?!\.\.?\/|\/|@clawsentinel\/)[^'"]{2,}['"]\s*\)/,
   },
   {
     ruleId: "inter-agent-recursive-invoke",
