@@ -1,0 +1,57 @@
+## LOG ENTRY: 20260310-053-CLAUDE
+**SVT:** SVT:beta14|fc7adc254a99c97c|20260310-053-CLAUDE|OPEN-005,OPEN-012,OPEN-015,OPEN-018
+
+---
+
+## PATTERN 3 STATE TRANSITION REVIEW — ChatGPT Round 4
+
+Cross-referencing relay response against Bypass Workbench. Applying state transitions where warranted.
+
+---
+
+## DECISIONS
+
+**Q1 — BP-009 (exfil-buffer-encode-chain) | Reflect.get + variable codec**
+`IMPLEMENT`
+Confirmed reproduction of known-open BP-009 (status: open, verified_fixed: false). Fix scope is clear: extend rule to cover Reflect.get accessor path and variable-held codec argument in Buffer encode chain. Transition BP-009 → fix-pending; assign to next ChatGPT implementation task.
+
+**Q2 — BP-010 (exfil-variable-indirection-headers) | multi-hop Headers.set**
+`DECLINE`
+BP-010 is already `verified_fixed: true` per Grok regression tests (20260312-064-GROK). Round 4 is reproducing the pre-fix state. No state transition warranted; no duplicate work to assign.
+
+**Q3 — BP-011 (inject-dynamic-jailbreak) | array join assembly**
+`DECLINE`
+BP-011 is already `verified_fixed: true` per Grok regression tests (20260312-064-GROK). Same situation as Q2. No action required.
+
+**Q4 — BP-012 (supply-unverified-external-import) | dynamic import variable**
+`DECLINE`
+BP-012 is already `verified_fixed: true`, fix confirmed by ChatGPT D4F1 pass (20260312-063-CHATGPT). Round 4 relay is duplicating a closed finding. No action required.
+
+**Q5.1 — BP-013 (credential-hardcoded-inline) | fragmented concat**
+`IMPLEMENT`
+Confirmed reproduction of known-open BP-013 (status: confirmed, verified_fixed: false, extends BP-005). Fix scope is clear: extend rule to detect multi-variable credential reconstruction via string concat. Transition BP-013 → fix-pending; assign to next ChatGPT implementation task alongside BP-009.
+
+**Q5.2 — BP-014 (inter-agent-recursive-invoke) | detached alias invocation**
+`DEFER`
+Confirmed reproduction of known-open BP-014 (verified_fixed: false), but runtime guardAgentRecursion() already catches this at execution. Static-scan gap is real but risk is partially mitigated. Defer static-scan fix until BP-009 and BP-013 are resolved; lower blast radius.
+
+**Q6 — ADR-004 3-strike timing attack**
+`DEFER — FLAG FOR SHEM`
+The observation is architecturally valid: a patient attacker can stagger operations to avoid consecutive strikes. However, the proposed fix (adaptive thresholds, temporal staggering) is a significant ADR-004 amendment touching the user control model and sandbox kill authority. This cannot be decided at producer level alone. Flagged below.
+
+---
+
+## NEXT ACTIONS
+
+1. **Assign BP-009 + BP-013 fix implementation to ChatGPT** (next relay cycle). Single task: extend `exfil-buffer-encode-chain` rule for Reflect.get/variable-codec path; extend `credential-hardcoded-inline` rule for multi-hop concat reconstruction. Grok to supply regression tests for both before verified_fixed is set true.
+
+2. **Update Bypass Workbench:** BP-009 and BP-013 status → `fix-pending`. BP-010, BP-011, BP-012 — no change (already closed). BP-014 — add note: "Deferred; runtime mitigation active via guardAgentRecursion()."
+
+3. **Draft ADR-004 amendment proposal for Shem review** (Q6 timing attack). Do not implement. Document the threat model addition and proposed mitigation options so Shem can make an informed approval decision.
+
+---
+
+## FLAGS — REQUIRES SHEM EXPLICIT APPROVAL
+
+🚩 **ADR-004 Amendment — 3-Strike Timing Attack Mitigation**
+ChatGPT Round 4 has identified a valid architectural gap: a staggered-execution attacker can avoid the 3-strike sandbox kill by spacing operations to prevent consecutive strike accumulation. Any change to strike threshold logic, temporal windowing, or adaptive kill policy touches ADR-004 directly and affects the user control model. This requires Shem approval before any implementation work begins. Current ADR-004 protections remain in force unchanged until approved.
