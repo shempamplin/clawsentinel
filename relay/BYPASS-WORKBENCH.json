@@ -137,8 +137,8 @@
       "confidence": 97,
       "fix_applied": null,
       "fix_entry_id": null,
-      "verified_fixed": true,
-      "notes": "headers.set/append variable arg pattern \u2014 Grok regression tests pass (20260312-064-GROK)"
+      "verified_fixed": false,
+      "notes": "Round 4 ChatGPT confirmed Bearer+concat variant evades fix. Reopened 20260319."
     },
     {
       "id": "BP-011",
