@@ -558,7 +558,9 @@ ACTIVE:
 
   OPEN-026  Adaptive sandbox threshold (ADR-004 scope)  Claude  post-beta14
 
-  Next open item ID: OPEN-027
+  OPEN-027  Relay automation — auto-resolve routine decisions  Claude  v1.1.0
+
+  Next open item ID: OPEN-028
 
 PATCH SCRIPT FINDINGS (Grok 036-GROK — Gemini cross-review pending):
   1. No rollback on partial failure [CONFIDENCE: 95]
