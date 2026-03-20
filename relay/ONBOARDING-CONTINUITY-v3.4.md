@@ -556,7 +556,9 @@ ACTIVE:
   OPEN-024  NemoClaw full integration                         Full team           v1.1.0
   OPEN-025  Enterprise domain join / policy management        Claude (arch)       v1.1.0
 
-  Next open item ID: OPEN-026
+  OPEN-026  Adaptive sandbox threshold (ADR-004 scope)  Claude  post-beta14
+
+  Next open item ID: OPEN-027
 
 PATCH SCRIPT FINDINGS (Grok 036-GROK — Gemini cross-review pending):
   1. No rollback on partial failure [CONFIDENCE: 95]
