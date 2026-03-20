@@ -39,7 +39,7 @@ const TAG_LENGTH = 16;  // 128-bit auth tag — do not reduce
 const SALT_LENGTH = 32;
 // scrypt N=2^17: memory-hard, defeats GPU parallelism. ~200ms on modern CPU.
 // Upgraded from N=2^14 per ChatGPT crypto review (log: 20260308-012-CHATGPT).
-const SCRYPT_N = 131072; // 2^17
+const SCRYPT_N = process.env.NODE_ENV === "test" ? 16384 : 131072; // 2^14 test | 2^17 prod (ADR-001)
 const SCRYPT_R = 8;
 const SCRYPT_P = 1;
 const STORE_VERSION = 1;

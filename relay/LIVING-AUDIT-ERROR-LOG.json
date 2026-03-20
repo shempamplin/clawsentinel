@@ -616,6 +616,54 @@
       "resolved_by": "20260312-065-CLAUDE",
       "resolved_at": "2026-03-12T00:00:00.000Z",
       "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260319-034",
+      "cycle": "beta14",
+      "detected_by": "CLAUDE-LEAD-PRODUCER",
+      "detected_at": "2026-03-19T00:00:00.000Z",
+      "log_entry_ref": "20260319-066-CLAUDE",
+      "error_class": "TEST_SAMPLE_ERROR",
+      "severity": "high",
+      "description": "74 tests/skill-scanner.test.ts failures: 30 describe blocks with samples not matching real rule patterns, 10 template literal eval bugs, 3 false-positive safe: tests, 12 old rule IDs in src/security/skill-scanner.test.ts, wrong severity on 3 renamed rules.",
+      "location": "tests/skill-scanner.test.ts, src/security/skill-scanner.test.ts",
+      "line_ref": null,
+      "resolution": "All 30 describe blocks replaced with pattern-verified samples. Rule IDs and severities corrected. 259 tests passing, 0 failures. 20260319-066-CLAUDE.",
+      "resolved_by": "20260319-066-CLAUDE",
+      "resolved_at": "2026-03-19T00:00:00.000Z",
+      "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260319-035",
+      "cycle": "beta14",
+      "detected_by": "CLAUDE-LEAD-PRODUCER",
+      "detected_at": "2026-03-19T00:00:00.000Z",
+      "log_entry_ref": "20260319-066-CLAUDE",
+      "error_class": "CONFIG",
+      "severity": "medium",
+      "description": "SCRYPT_N=131072 causes RangeError in test environment \u2014 ~128MB per scryptSync call exceeds worker memory limit. 13 sentinel-secrets-store tests failing.",
+      "location": "src/security/sentinel-secrets-store.ts:42",
+      "line_ref": 42,
+      "resolution": "SCRYPT_N conditional: 2^14 when NODE_ENV=test, 2^17 in production. ADR-001 preserved. 20260319-066-CLAUDE.",
+      "resolved_by": "20260319-066-CLAUDE",
+      "resolved_at": "2026-03-19T00:00:00.000Z",
+      "recurrence_count": 1
+    },
+    {
+      "id": "AUDIT-20260319-036",
+      "cycle": "beta14",
+      "detected_by": "CLAUDE-LEAD-PRODUCER",
+      "detected_at": "2026-03-19T00:00:00.000Z",
+      "log_entry_ref": "20260319-066-CLAUDE",
+      "error_class": "CONFIG",
+      "severity": "low",
+      "description": "Vitest config running all 1756 OpenClaw monorepo tests. audit.test.ts and dm-policy-channel-smoke.test.ts cause suite-level failures via unresolvable openclaw/plugin-sdk/* imports.",
+      "location": "clawsentinel.vitest.config.ts",
+      "line_ref": null,
+      "resolution": "Created clawsentinel.vitest.config.ts scoped to ClawSentinel tests only with explicit excludes. 20260319-066-CLAUDE.",
+      "resolved_by": "20260319-066-CLAUDE",
+      "resolved_at": "2026-03-19T00:00:00.000Z",
+      "recurrence_count": 1
     }
   ]
 }
