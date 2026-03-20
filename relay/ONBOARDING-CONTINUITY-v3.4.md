@@ -550,7 +550,13 @@ ACTIVE:
   OPEN-019  Runtime behavioral audit log             Needs ADR-009       high
   OPEN-020  Output streaming — full exec trace       Needs ADR-010       v1.1
 
-  Next open item ID: OPEN-021
+  OPEN-021  Hardware requirements spec (per-instance)      Claude+Grok         M6/v1.0.0
+  OPEN-022  Multi-instance optimization (Docker/shared)       Full team           v1.1.0
+  OPEN-023  NemoClaw conflict audit (sandbox coexistence)     Claude              M6/v1.0.0
+  OPEN-024  NemoClaw full integration                         Full team           v1.1.0
+  OPEN-025  Enterprise domain join / policy management        Claude (arch)       v1.1.0
+
+  Next open item ID: OPEN-026
 
 PATCH SCRIPT FINDINGS (Grok 036-GROK — Gemini cross-review pending):
   1. No rollback on partial failure [CONFIDENCE: 95]
