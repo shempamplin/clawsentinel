@@ -22,11 +22,6 @@ import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
-try:
-    from adr_manager import validate_adr, check_staleness, get_next_adr_number
-    ADR_MANAGER_AVAILABLE = True
-except ImportError:
-    ADR_MANAGER_AVAILABLE = False
 from pydantic_ai import Agent
 from pydantic_ai.models.openrouter import OpenRouterModel
 from pydantic_ai.providers.openrouter import OpenRouterProvider
@@ -38,7 +33,6 @@ RELAY_DIR = REPO_DIR / 'relay'
 ENV_PATH  = REPO_DIR / '.env'
 
 MAX_API_CALLS = 10       # hard ceiling per run
-MAX_API_CALLS_ARCH = 20  # higher limit for architecture decisions
 call_count    = 0        # global counter
 
 # ── Model strings ─────────────────────────────────────────────────────────────
@@ -185,18 +179,6 @@ def git_commit(files: list[str], message: str, log: SessionLog):
         if not str(p).startswith(str(RELAY_DIR)):
             raise ValueError(f"SAFETY BLOCK: {f} is outside relay/ directory. Aborting.")
 
-    # Validate any ADR files being committed
-    if ADR_MANAGER_AVAILABLE:
-        for f in files:
-            if 'ADR-' in f and f.endswith('.md'):
-                content = Path(f).read_text()
-                errors = validate_adr(content, f)
-                if errors:
-                    raise ValueError(
-                        f"ADR validation failed for {f}:\n" +
-                        "\n".join(f"  - {e}" for e in errors)
-                    )
-                    
     subprocess.run(['git', 'add'] + files, cwd=REPO_DIR, check=True)
     subprocess.run(['git', 'commit', '-m', message], cwd=REPO_DIR, check=True)
     subprocess.run(['git', 'push', 'origin', 'main'], cwd=REPO_DIR, check=True)
@@ -214,11 +196,6 @@ TASKS = {
         'description': 'Ask Gemini to cross-review Grok patch script findings (OPEN-017)',
         'target_ai':   'gemini',
         'output_file': 'relay/gemini-patch-review-response.txt',
-    },
-    'architecture-decision': {
-        'description': 'Three-model design council for ADR-level decisions (OPEN-028)',
-        'target_ai':   'claude',
-        'output_file': 'relay/ADR-DRAFT-{subject}-{date}.md',
     },
     'grok-open005': {
         'description': 'Ask Grok for next batch of OPEN-005 test coverage',
@@ -276,36 +253,6 @@ Please cross-review these findings. For each:
 - Recommended fix
 
 Use NNN for log entry number. Standard relay format.""",
-
-
-    'architecture-decision': lambda ctx, subject="": f"""PROJECT: ClawSentinel | CYCLE: beta14 | ROLE: Lead Producer
-LAST LOG ENTRY: 20260319-066-CLAUDE
-
-PROJECT CONTEXT:
-{ctx}
-
----
-
-You are running the Three-Model Architecture Decision Council (ADR-009).
-
-SUBJECT: {subject if subject else "See attached context"}
-
-STEP 1 — PROBLEM DEFINITION
-State the design problem in one sentence.
-List all constraints (performance, cost, timeline, existing stack, licensing, existing ADRs affected).
-List all goals ranked by priority.
-
-STEP 2 — THREE CANDIDATE SOLUTIONS
-For each:
-- Name
-- Plain-language description
-- Pros
-- Cons
-- Implementation cost in hours
-- Prior art / licensing / patent risks
-- Confidence: High / Medium / Low
-
-Output Steps 1-2 clearly labeled. ChatGPT will receive this output next for adversarial critique.""",
 
     'grok-open005': lambda ctx: f"""PROJECT: ClawSentinel | CYCLE: beta14 | ROLE: Test Coverage Lead
 LAST LOG ENTRY: 20260319-066-CLAUDE

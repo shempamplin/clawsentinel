@@ -9,11 +9,6 @@ claude-end  → commits changes, pushes, generates updated context file
 """
 
 import sys, json, subprocess, os
-try:
-    from adr_manager import check_staleness, print_staleness_warnings
-    ADR_CHECK_AVAILABLE = True
-except ImportError:
-    ADR_CHECK_AVAILABLE = False
 from pathlib import Path
 from datetime import datetime, timezone
 

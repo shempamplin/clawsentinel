@@ -1,0 +1,127 @@
+================================================================================
+CLAWSENTINEL — ARCHITECTURE DECISION RECORD
+ADR-010: ADR Process Automation and Enforcement
+Status: PROPOSED
+Date: 2026-03-22
+Author: Claude Sonnet 4.6
+Approved by: PENDING — Shem Pamplin
+Log entry: NNN-CLAUDE
+Post-hoc review: Gemini (compliance audit of process) — beta14
+================================================================================
+
+CONTEXT
+
+ClawSentinel has 8 accepted ADRs as of beta14. Problems observed:
+
+  1. STALENESS: ADR-007 sat in PROPOSED state for 3 cycles before approval.
+     No automated warning was generated. Shem had to be reminded manually.
+
+  2. TEMPLATE DRIFT: ADR files have slight structural variations.
+     The relay script cannot reliably parse ADR status without a strict schema.
+
+  3. MANUAL DRAFTING: When Claude's review flags an ADR-level decision,
+     the draft is written as prose in a chat message, not as a structured file.
+     Shem must manually create the ADR file from that prose.
+
+  4. NO APPROVAL GATE: ADR drafts can be committed to main without
+     Shem's explicit approval if the commit message doesn't flag it.
+
+DECISION
+
+Three automated improvements to the ADR process:
+
+── 1. TEMPLATE ENFORCEMENT ──────────────────────────────────────────────────
+
+All ADR files must conform to the standard template (ADR-TEMPLATE.md).
+The relay script validates structure before committing any ADR file.
+
+Required sections (validation fails if any are missing):
+  - Status line: PROPOSED | ACCEPTED | SUPERSEDED | DEPRECATED
+  - Date line: YYYY-MM-DD format
+  - Author line
+  - CONTEXT section
+  - DECISION section
+  - ENFORCEMENT section
+  - RATIONALE section
+  - CONSEQUENCES section
+  - ALTERNATIVES CONSIDERED section (minimum 2 alternatives)
+  - POST-HOC REVIEW REQUIRED section
+
+Validation runs in sentinel_relay_v2.py before any ADR file is committed.
+Invalid ADR files are rejected with a plain-English error message.
+
+── 2. STALENESS DETECTION ───────────────────────────────────────────────────
+
+hey-claude startup script checks all ADR files for staleness.
+
+A PROPOSED ADR is stale if:
+  - Its Date field is more than 14 days ago AND
+  - Its Status is still PROPOSED
+
+On detection, hey-claude prints a warning:
+
+  ⚠ STALE ADR: ADR-007 has been PROPOSED for 13 days without approval.
+    File: relay/ADR-007.md
+    Action required: APPROVE, DEFER, or DECLINE
+
+This warning prints at session start until the ADR is resolved.
+The 14-day threshold may be overridden per-ADR by adding:
+  Staleness-Override: DEFER-INDEFINITELY
+to the ADR file header.
+
+── 3. AUTO-DRAFT ON FLAG ────────────────────────────────────────────────────
+
+When Claude's relay review flags an ADR-level decision (FLAG section
+contains "ADR"), the relay script automatically:
+
+  a. Runs the Three-Model Design Council process (ADR-009)
+  b. Produces a complete ADR draft in standard template format
+  c. Saves it as relay/ADR-DRAFT-[subject]-[date].md
+  d. Does NOT commit to relay/ADR-NNN.md until Shem types APPROVE
+  e. Adds a staleness entry starting from draft creation date
+
+The draft filename uses a descriptive slug, not a number.
+Numbers are assigned only when Shem approves and the file is finalized.
+
+ENFORCEMENT
+
+  Template validation: relay script, pre-commit check
+  Staleness detection: sentinel_sync.py --start (hey-claude)
+  Auto-draft trigger: sentinel_relay_v2.py review phase
+  Approval gate: relay script requires explicit APPROVE before finalizing
+
+RATIONALE
+
+ADR-007's 3-cycle delay cost time and created ambiguity about whether
+the policy was in effect. Automated staleness warnings prevent this.
+
+Template enforcement enables the relay script to parse ADR status reliably,
+which is required for the staleness check and the auto-draft trigger.
+
+Manual ADR drafting from chat prose is error-prone and slow. Auto-drafting
+from the Three-Model Council output (ADR-009) produces better ADRs faster.
+
+CONSEQUENCES
+
+  - hey-claude output becomes slightly longer (staleness warnings)
+  - All existing ADRs must be verified against the template (one-time audit)
+  - New ADR proposals take slightly longer (template enforcement)
+  - Shem sees fewer half-formed ADR proposals — only complete drafts
+
+ALTERNATIVES CONSIDERED
+
+  Manual staleness tracking (current): Rejected — already failed with ADR-007.
+  Requires human memory, which is unreliable across sessions.
+
+  GitHub Issues for ADR tracking: Rejected — adds another tool to the stack.
+  Everything lives in the repo as flat files; keep it consistent.
+
+POST-HOC REVIEW REQUIRED
+
+Gemini to audit existing ADR-001 through ADR-008 against the new template
+for compliance gaps. Flag any ADRs missing required sections.
+Target: beta14, within 2 relay cycles of ADR-010 acceptance.
+
+================================================================================
+END ADR-010
+================================================================================

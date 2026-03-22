@@ -1,10 +1,10 @@
 # ClawSentinel — Daily Context Sync
-# Generated: 2026-03-22 04:32 UTC
+# Generated: 2026-03-22 17:42 UTC
 # Upload this file to your Claude.ai project knowledge to sync chat Claude.
 
 ## REPO STATE
 Branch: main
-Last commit: 11fa7d2 beta14: add sentinel_sync.py + hey-claude/claude-end commands
+Last commit: 06c32e3 beta14: add context file and gitignore
 
 ## RECENT AUDIT LOG (last 3 entries)
 - AUDIT-20260319-034 [high]: 74 tests/skill-scanner.test.ts failures: 30 describe blocks with samples not matching real rule patt

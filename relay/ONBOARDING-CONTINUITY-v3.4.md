@@ -560,7 +560,10 @@ ACTIVE:
 
   OPEN-027  Relay automation — auto-resolve routine decisions  Claude  v1.1.0
 
-  Next open item ID: OPEN-028
+  OPEN-028  Architecture decision framework (3-model council)  Claude  v1.1.0
+  OPEN-029  ADR process automation (template+staleness+autodraft)  Claude  v1.1.0
+
+  Next open item ID: OPEN-030
 
 PATCH SCRIPT FINDINGS (Grok 036-GROK — Gemini cross-review pending):
   1. No rollback on partial failure [CONFIDENCE: 95]

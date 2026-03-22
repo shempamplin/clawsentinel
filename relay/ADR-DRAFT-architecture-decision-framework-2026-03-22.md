@@ -1,0 +1,122 @@
+================================================================================
+CLAWSENTINEL — ARCHITECTURE DECISION RECORD
+ADR-009: Architecture Decision Framework — Three-Model Design Council
+Status: PROPOSED
+Date: 2026-03-22
+Author: Claude Sonnet 4.6
+Approved by: PENDING — Shem Pamplin
+Log entry: NNN-CLAUDE
+Post-hoc review: ChatGPT (adversarial critique of process) — beta14
+================================================================================
+
+CONTEXT
+
+ClawSentinel makes architectural decisions informally — a single AI (Claude)
+proposes, Shem approves. This works for straightforward decisions but creates
+risk for complex ones:
+
+  - Single perspective misses blind spots
+  - No systematic adversarial review before commitment
+  - ADR drafts are written after decisions are made, not as part of making them
+  - No prior art / research step to catch existing solutions
+
+ADR-007 and ADR-008 were decided correctly but without structured multi-model
+review. OPEN-025 (enterprise domain join), OPEN-026 (adaptive sandbox),
+and OPEN-028/029 are architecturally complex enough to warrant a formal process.
+
+DECISION
+
+Any decision that would result in a new ADR or amend an existing ADR MUST go
+through the Three-Model Design Council process before Shem is asked to approve.
+
+The process runs as a relay task (--task architecture-decision) with five steps:
+
+  STEP 1 — PROBLEM DEFINITION (Claude)
+    State the problem in one sentence.
+    List all constraints: performance, cost, timeline, existing stack, licensing.
+    List all goals ranked by priority.
+    Identify which existing ADRs are affected.
+
+  STEP 2 — CANDIDATE SOLUTIONS (Claude)
+    Generate exactly three candidate solutions.
+    For each: name, plain-language description, pros, cons,
+    implementation cost in hours, prior art / licensing risks,
+    confidence rating (High/Medium/Low).
+
+  STEP 3 — ADVERSARIAL CRITIQUE (ChatGPT)
+    For each candidate: argue against it as a hostile engineer.
+    What breaks? What is naive? What did the proposer miss?
+    Must reference exact technical mechanisms, not general concerns.
+
+  STEP 4 — BREADTH CHECK (Gemini)
+    Scan the solution space for missed alternatives.
+    Cross-reference against OWASP, existing ClawSentinel ADRs,
+    and NemoClaw architecture where relevant.
+    Flag any prior art, patent risks, or licensing concerns.
+
+  STEP 5 — SYNTHESIS AND ADR DRAFT (Claude)
+    Incorporate Steps 3-4 feedback.
+    Select recommended solution with explicit reasoning.
+    Produce complete ADR draft in standard template format.
+    List all items requiring Shem's explicit approval.
+
+Context is chained through all steps — each model receives the full
+output of all prior steps before generating its contribution.
+
+OUTPUT
+
+A complete ADR draft file committed to relay/ awaiting Shem approval.
+File naming: relay/ADR-DRAFT-[subject]-[date].md
+
+ENFORCEMENT
+
+  - Relay script enforces step sequence — steps cannot be skipped
+  - ADR draft is not committed to relay/ADR-NNN.md until Shem types APPROVE
+  - Architecture tasks have a 20-call API limit (vs 10 for standard tasks)
+  - All five steps are logged to SESSION-LOG.md
+
+TRIGGER CONDITIONS
+
+The council process is REQUIRED when:
+  - A new ADR is being proposed
+  - An existing ADR is being amended
+  - An OPEN item is flagged as architectural in the task board
+  - Claude's relay review outputs the word "ADR" in a FLAG section
+
+The council process is OPTIONAL (Claude may skip to Step 5) when:
+  - The decision is a minor clarification with no behavioral change
+  - Shem explicitly waives the process for a specific decision
+
+RATIONALE
+
+Multi-model review catches blind spots that single-model review misses.
+ChatGPT's adversarial role is already established and trusted.
+Gemini's breadth scan has identified gaps Claude missed (OWASP additions
+in ADR-008 review). Formalizing this as a relay task makes it consistent
+and automatic rather than ad-hoc.
+
+CONSEQUENCES
+
+  - Each ADR now takes 3-5 API calls instead of 1
+  - Estimated cost per ADR decision: $0.10-0.30
+  - Timeline per ADR: ~5 minutes automated vs ~30 minutes manual relay
+  - Shem sees a complete, adversarially-reviewed ADR draft, not a raw proposal
+
+ALTERNATIVES CONSIDERED
+
+  Single-model draft (current process): Rejected — no adversarial review,
+  single perspective, already produced gaps (ADR-008 missed cost-bombing
+  until Gemini flagged it post-hoc).
+
+  Human-facilitated multi-model review: Rejected — this is what we're
+  replacing. Too slow, requires Shem to relay between chat windows manually.
+
+POST-HOC REVIEW REQUIRED
+
+ChatGPT to adversarially critique the council process itself — are there
+failure modes where the three-model process produces false confidence?
+Target: first architecture task run.
+
+================================================================================
+END ADR-009
+================================================================================
