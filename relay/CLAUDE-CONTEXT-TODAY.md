@@ -1,10 +1,10 @@
 # ClawSentinel — Daily Context Sync
-# Generated: 2026-03-22 17:42 UTC
+# Generated: 2026-03-22 18:15 UTC
 # Upload this file to your Claude.ai project knowledge to sync chat Claude.
 
 ## REPO STATE
 Branch: main
-Last commit: 06c32e3 beta14: add context file and gitignore
+Last commit: 85774c4 beta14: remove .bak files, add .bak to gitignore
 
 ## RECENT AUDIT LOG (last 3 entries)
 - AUDIT-20260319-034 [high]: 74 tests/skill-scanner.test.ts failures: 30 describe blocks with samples not matching real rule patt
@@ -36,7 +36,7 @@ Unverified:
   OPEN-019  Runtime behavioral audit log             Needs ADR-009       high
   OPEN-021  Hardware requirements spec (per-instance)      Claude+Grok         M6/v1.0.0
   OPEN-023  NemoClaw conflict audit (sandbox coexistence)     Claude              M6/v1.0.0
-  Next open item ID: OPEN-028
+  Next open item ID: OPEN-030
 
 ## RECENT SESSION LOG (last 10 lines)
   - `21:08:47 UTC` Session started — task: chatgpt-round4, dry_run: False
