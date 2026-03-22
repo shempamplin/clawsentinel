@@ -563,7 +563,9 @@ ACTIVE:
   OPEN-028  Architecture decision framework (3-model council)  Claude  v1.1.0
   OPEN-029  ADR process automation (template+staleness+autodraft)  Claude  v1.1.0
 
-  Next open item ID: OPEN-030
+  OPEN-030  Sandbox timing attack mitigation (ADR-004)  Claude  post-beta14
+
+  Next open item ID: OPEN-031
 
 PATCH SCRIPT FINDINGS (Grok 036-GROK — Gemini cross-review pending):
   1. No rollback on partial failure [CONFIDENCE: 95]

@@ -195,6 +195,20 @@
       "fix_entry_id": null,
       "verified_fixed": false,
       "notes": "BP-006 remains reproducible at static-scan level. Runtime guardAgentRecursion() still catches it. Source: 20260312-053-CHATGPT"
+    },
+    {
+      "id": "BP-015",
+      "rule_targeted": "sandbox",
+      "cycle": "beta14",
+      "status": "confirmed",
+      "severity": "medium",
+      "bypass_code": "setTimeout(() => op1(), 1000); setTimeout(() => op2(), 5000);",
+      "evasion_reason": "Fixed 3-strike threshold is known; attacker spaces operations to avoid consecutive strikes",
+      "confidence": 80,
+      "fix_applied": null,
+      "fix_entry_id": null,
+      "verified_fixed": false,
+      "notes": "ChatGPT Round 4 finding. ADR-004 amendment required before mitigation. Logged as OPEN-030. Deferred post-beta14. 2026-03-22"
     }
   ],
   "open_bypass_classes": [
