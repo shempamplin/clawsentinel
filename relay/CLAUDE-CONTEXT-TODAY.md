@@ -1,10 +1,10 @@
 # ClawSentinel — Daily Context Sync
-# Generated: 2026-03-22 18:23 UTC
+# Generated: 2026-03-22 18:54 UTC
 # Upload this file to your Claude.ai project knowledge to sync chat Claude.
 
 ## REPO STATE
 Branch: main
-Last commit: 994fd3b beta14: APPROVE ADR-009 + ADR-010 — Shem Pamplin 2026-03-22
+Last commit: f61664a beta14: chatgpt-round4 relay — automated via sentinel_relay_v2
 
 ## RECENT AUDIT LOG (last 3 entries)
 - AUDIT-20260319-034 [high]: 74 tests/skill-scanner.test.ts failures: 30 describe blocks with samples not matching real rule patt
@@ -15,7 +15,7 @@ Last commit: 994fd3b beta14: APPROVE ADR-009 + ADR-010 — Shem Pamplin 2026-03-
   Resolution: Created clawsentinel.vitest.config.ts scoped to ClawSentinel tests only with exp
 
 ## BYPASS WORKBENCH
-Total: 14 | Verified fixed: 6 | Open: 8
+Total: 15 | Verified fixed: 6 | Open: 9
 Unverified:
   BP-005 [?] credential-hardcoded-inline — Partial fix — full variable-concat chain may still evade. ChatGPT round 4 to ver
   BP-006 [?] inter-agent-recursive-invoke — Awaiting ChatGPT round 4 verification.
@@ -25,6 +25,7 @@ Unverified:
   BP-010 [critical] exfil-variable-indirection-headers — Round 4 ChatGPT confirmed Bearer+concat variant evades fix. Reopened 20260319.
   BP-013 [critical] credential-hardcoded-inline — BP-005 remains reproducible via concat. Source: 20260312-053-CHATGPT
   BP-014 [high] inter-agent-recursive-invoke — BP-006 remains reproducible at static-scan level. Runtime guardAgentRecursion() 
+  BP-015 [medium] sandbox — ChatGPT Round 4 finding. ADR-004 amendment required before mitigation. Logged as
 
 ## OPEN ITEMS
   M4-BLOCKERS:    OPEN-005, OPEN-012, OPEN-015, OPEN-018
@@ -36,19 +37,19 @@ Unverified:
   OPEN-019  Runtime behavioral audit log             Needs ADR-009       high
   OPEN-021  Hardware requirements spec (per-instance)      Claude+Grok         M6/v1.0.0
   OPEN-023  NemoClaw conflict audit (sandbox coexistence)     Claude              M6/v1.0.0
-  Next open item ID: OPEN-030
+  Next open item ID: OPEN-031
 
 ## RECENT SESSION LOG (last 10 lines)
-  - `21:08:47 UTC` Session started — task: chatgpt-round4, dry_run: False
-  - `21:08:47 UTC` Repo context loaded
-    16486 chars from 3 files
-  - `21:08:47 UTC` Safety review requested
-  - `21:09:14 UTC` chatgpt responded
-    2856 chars
-  - `21:09:14 UTC` Response saved to relay/chatgpt-round4-response.txt
-  - `21:09:39 UTC` Claude review complete
-    3922 chars
-  - `21:09:39 UTC` Review saved to relay/chatgpt-round4-claude-review.txt
+  - `18:52:01 UTC` Session started — task: chatgpt-round4, dry_run: False
+  - `18:52:01 UTC` Repo context loaded
+    17050 chars from 3 files
+  - `18:52:01 UTC` Safety review requested
+  - `18:52:38 UTC` chatgpt responded
+    3667 chars
+  - `18:52:38 UTC` Response saved to relay/chatgpt-round4-response.txt
+  - `18:53:07 UTC` Claude review complete
+    4274 chars
+  - `18:53:07 UTC` Review saved to relay/chatgpt-round4-claude-review.txt
 
 ## PENDING RELAY REVIEWS (awaiting implementation)
   chatgpt-round4-claude-review.txt
