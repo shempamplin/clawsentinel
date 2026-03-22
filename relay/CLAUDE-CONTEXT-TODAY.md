@@ -1,10 +1,10 @@
 # ClawSentinel — Daily Context Sync
-# Generated: 2026-03-22 18:15 UTC
+# Generated: 2026-03-22 18:23 UTC
 # Upload this file to your Claude.ai project knowledge to sync chat Claude.
 
 ## REPO STATE
 Branch: main
-Last commit: 85774c4 beta14: remove .bak files, add .bak to gitignore
+Last commit: 994fd3b beta14: APPROVE ADR-009 + ADR-010 — Shem Pamplin 2026-03-22
 
 ## RECENT AUDIT LOG (last 3 entries)
 - AUDIT-20260319-034 [high]: 74 tests/skill-scanner.test.ts failures: 30 describe blocks with samples not matching real rule patt
