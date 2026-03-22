@@ -1,57 +1,58 @@
-## LOG ENTRY: 20260310-053-CLAUDE
-**SVT:** SVT:beta14|fc7adc254a99c97c|20260310-053-CLAUDE|OPEN-005,OPEN-012,OPEN-015,OPEN-018
-
----
-
-## PATTERN 3 STATE TRANSITION REVIEW — ChatGPT Round 4
-
-Cross-referencing relay response against Bypass Workbench. Applying state transitions where warranted.
+## LOG ENTRY: 20260319-067-CLAUDE
+**Reviewing:** 20260319-067-CHATGPT (Round 4 Red-Team Response)
+**SVT:** SVT:beta14|fc7adc254a99c97c|20260319-066-CLAUDE|OPEN-005,OPEN-012,OPEN-015,OPEN-018
+**Pattern Applied:** Pattern 3 (State Transition) — each finding assessed against current bypass status, fix readiness, and ADR impact.
 
 ---
 
 ## DECISIONS
 
-**Q1 — BP-009 (exfil-buffer-encode-chain) | Reflect.get + variable codec**
-`IMPLEMENT`
-Confirmed reproduction of known-open BP-009 (status: open, verified_fixed: false). Fix scope is clear: extend rule to cover Reflect.get accessor path and variable-held codec argument in Buffer encode chain. Transition BP-009 → fix-pending; assign to next ChatGPT implementation task.
+**BP-009 / exfil-buffer-encode-chain — Round 4 Variant (Object.keys map+join)**
+**IMPLEMENT**
+New variant (confidence 95) extends the already-open BP-009 with a map/join encoding path not covered by current detection. BP-009 fix is unblocked and this variant should be bundled into the same fix task. Assign to ChatGPT as fix author per prior pattern.
 
-**Q2 — BP-010 (exfil-variable-indirection-headers) | multi-hop Headers.set**
-`DECLINE`
-BP-010 is already `verified_fixed: true` per Grok regression tests (20260312-064-GROK). Round 4 is reproducing the pre-fix state. No state transition warranted; no duplicate work to assign.
+**BP-009 Q1 Example (Reflect.get + dynamic codec via process.env)**
+**IMPLEMENT**
+Same fix target as above. The dynamic-codec path (codec sourced from process.env) is a genuine evasion not present in the original BP-009 write-up. Bundle with BP-009 fix; add process.env-sourced codec as an explicit test case.
 
-**Q3 — BP-011 (inject-dynamic-jailbreak) | array join assembly**
-`DECLINE`
-BP-011 is already `verified_fixed: true` per Grok regression tests (20260312-064-GROK). Same situation as Q2. No action required.
+**BP-010 / exfil-variable-indirection-headers — while-loop reassignment variant**
+**IMPLEMENT**
+Confidence 92 variant (while-loop reassignment + Headers constructor from dynamic vars) confirms BP-010 remains reproducible in a new form. Existing BP-010 fix task is open; this variant expands scope. Bundle into same fix.
 
-**Q4 — BP-012 (supply-unverified-external-import) | dynamic import variable**
-`DECLINE`
-BP-012 is already `verified_fixed: true`, fix confirmed by ChatGPT D4F1 pass (20260312-063-CHATGPT). Round 4 relay is duplicating a closed finding. No action required.
+**BP-011 / inject-dynamic-jailbreak — reverse().join() variant**
+**DEFER**
+BP-011 is marked verified_fixed (Grok regression tests pass). This variant (reverse+join) is a genuine regression risk but needs Grok to confirm whether existing tests cover inverted-array join before opening a new fix. Do not reopen until regression run is done.
 
-**Q5.1 — BP-013 (credential-hardcoded-inline) | fragmented concat**
-`IMPLEMENT`
-Confirmed reproduction of known-open BP-013 (status: confirmed, verified_fixed: false, extends BP-005). Fix scope is clear: extend rule to detect multi-variable credential reconstruction via string concat. Transition BP-013 → fix-pending; assign to next ChatGPT implementation task alongside BP-009.
+**BP-012 / supply-unverified-external-import — template literal URL variant**
+**IMPLEMENT**
+Confidence 97. Dynamic import via template-literal URL (import(`https://.../${var}.js`)) is a distinct evasion from the variable-name case fixed in BP-012. BP-004 previously covered template literals in dynamic import but targeted CDN URLs differently. This is a real gap. Add as BP-016 and assign fix.
 
-**Q5.2 — BP-014 (inter-agent-recursive-invoke) | detached alias invocation**
-`DEFER`
-Confirmed reproduction of known-open BP-014 (verified_fixed: false), but runtime guardAgentRecursion() already catches this at execution. Static-scan gap is real but risk is partially mitigated. Defer static-scan fix until BP-009 and BP-013 are resolved; lower blast radius.
+**BP-013 / credential-hardcoded-inline — template literal variant**
+**IMPLEMENT**
+Confidence 95. Template literal credential assembly (`` `${keyPart1}${keyPart2}` ``) is distinguishable from the concat form in BP-013 and not covered by the current open fix task. Bundle into BP-013 fix scope with explicit template-literal test case.
 
-**Q6 — ADR-004 3-strike timing attack**
-`DEFER — FLAG FOR SHEM`
-The observation is architecturally valid: a patient attacker can stagger operations to avoid consecutive strikes. However, the proposed fix (adaptive thresholds, temporal staggering) is a significant ADR-004 amendment touching the user control model and sandbox kill authority. This cannot be decided at producer level alone. Flagged below.
+**BP-014 / inter-agent-recursive-invoke — bracket-notation detachment variant**
+**IMPLEMENT**
+Confidence 90. agent['invoke'] bracket detachment is a meaningful extension of BP-014. Runtime catch via guardAgentRecursion() still applies, but static scan gap is real. Bundle into BP-014 fix task.
+
+**3-Strike Timing Attack (ADR-004 amendment question)**
+**DEFER**
+This is BP-015, already logged as OPEN-030 and explicitly deferred post-beta14 per 2026-03-22 note. ChatGPT's analysis adds no new technical content beyond what was already captured. No action until beta14 closes. ADR-004 amendment required before mitigation — this is a FLAG item (see below).
 
 ---
 
 ## NEXT ACTIONS
 
-1. **Assign BP-009 + BP-013 fix implementation to ChatGPT** (next relay cycle). Single task: extend `exfil-buffer-encode-chain` rule for Reflect.get/variable-codec path; extend `credential-hardcoded-inline` rule for multi-hop concat reconstruction. Grok to supply regression tests for both before verified_fixed is set true.
+1. **Fix bundle task for BP-009 + BP-010 + BP-013 + BP-014:** Assign to ChatGPT as fix author. Deliver updated rule patterns and test cases for all four in a single relay. Grok to provide regression coverage on receipt.
 
-2. **Update Bypass Workbench:** BP-009 and BP-013 status → `fix-pending`. BP-010, BP-011, BP-012 — no change (already closed). BP-014 — add note: "Deferred; runtime mitigation active via guardAgentRecursion()."
+2. **Open BP-016 (supply-unverified-external-import — template literal URL):** Add to bypass workbench with status=confirmed, severity=critical, confidence=97. Include in same fix bundle or as immediate follow-on.
 
-3. **Draft ADR-004 amendment proposal for Shem review** (Q6 timing attack). Do not implement. Document the threat model addition and proposed mitigation options so Shem can make an informed approval decision.
+3. **Grok regression check on BP-011 reverse().join() variant:** Before reopening BP-011, Grok must confirm whether current tests cover inverted-array join. Return verdict to Claude before any fix work begins.
 
 ---
 
-## FLAGS — REQUIRES SHEM EXPLICIT APPROVAL
+## FLAGS (Requiring Shem Approval)
 
-🚩 **ADR-004 Amendment — 3-Strike Timing Attack Mitigation**
-ChatGPT Round 4 has identified a valid architectural gap: a staggered-execution attacker can avoid the 3-strike sandbox kill by spacing operations to prevent consecutive strike accumulation. Any change to strike threshold logic, temporal windowing, or adaptive kill policy touches ADR-004 directly and affects the user control model. This requires Shem approval before any implementation work begins. Current ADR-004 protections remain in force unchanged until approved.
+- **ADR-004 amendment (BP-015 / 3-strike timing):** Any mitigation involving randomized strike windows or heuristic activity scoring requires ADR-004 amendment. This cannot proceed without Shem explicit sign-off. Currently deferred post-beta14 — flagging for awareness only, no action required now.
+
+- **BP-016 new bypass entry:** Adding a new bypass workbench entry is within Claude's authority, but Shem should confirm the entry is committed to the doc before the next session to maintain SVT integrity.
